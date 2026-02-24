@@ -3,7 +3,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: vg-store-java-spring-ingress
-  namespace: vg-store-java-spring-dev
 spec:
   rules:
   - http:

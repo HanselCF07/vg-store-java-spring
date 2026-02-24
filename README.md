@@ -30,8 +30,16 @@
     kind load docker-image vg-store-java-spring:v1 # Si usas Kind
 
 
+# Crear namespaces
+    kubectl create namespace vg-store-java-spring-dev
+
+# Aplicar manifests por entorno
+    kubectl apply -f k8s/dev/ -n dev
+
 
 # Create Deployment and Service
+    kubectl apply -f k8s-config-map.yaml
+    kubectl apply -f k8s-secrets.yaml
     kubectl apply -f k8s-deployment.yaml
     kubectl apply -f k8s-service.yaml
 
