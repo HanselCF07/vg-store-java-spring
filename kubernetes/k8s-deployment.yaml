@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vg-store-java-spring
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vg-store-java-spring
+  template:
+    metadata:
+      labels:
+        app: vg-store-java-spring
+    spec:
+      containers:
+      - name: vg-store-java-spring
+        image: vg-store-java-spring:v1
+        ports:
+        - containerPort: 8080
