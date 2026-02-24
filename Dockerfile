@@ -1,16 +1,6 @@
-FROM maven:3.9.12-eclipse-temurin-21 AS build
+FROM maven:4.0.0-eclipse-temurin-21 AS build
 
 WORKDIR /vg-store
-
-# Definir variable de entorno
-ENV JWT_SECRET=c2VjdXJlLWtlLWZvci1qd3QtYXV0aC10b2tlbi1zaWduaW5nLWluLWZsYXNoLWFwcC1leGFtcGxlLXNlcnZlcg==
-ENV JWT_ALGORITHM=HS256
-
-ENV DRIVER_CLASS_NAME=org.postgresql.Driver
-ENV DATASOURCE_URL=jdbc:postgresql://192.168.1.47:5432/db_store
-ENV DATASOURCE_USERNAME=dev_user
-ENV DATASOURCE_PASSWORD=dev_123
-ENV JPA_HIBERNATE_DDL_AUTO=none
 
 # Copiar archivos de configuración de Maven y descargar dependencias (cacheable)
 COPY pom.xml .
@@ -49,5 +39,3 @@ EXPOSE 8080
 
 # Optimización de flags de JVM para contenedores
 ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "vg-store.jar"]
-
-#ENTRYPOINT ["java","-jar","vg-store.jar"]

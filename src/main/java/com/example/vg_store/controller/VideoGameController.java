@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v1/vg-hc-store/protected/data/video-games")
+@RequestMapping("/api/v1/vg-hc-store/data/protected/video-games")
 public class VideoGameController {
 
     private final VideoGameService videoGameService;
