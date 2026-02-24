@@ -20,22 +20,22 @@ spec:
           env:
             - name: DRIVER_CLASS_NAME
               valueFrom:
-                configMapRef:
+                configMapKeyRef:
                   name: vg-store-java-spring-config
                   key: DRIVER_CLASS_NAME
             - name: DATASOURCE_URL
               valueFrom:
-                configMapRef:
+                configMapKeyRef:
                   name: vg-store-java-spring-config
                   key: DATASOURCE_URL
             - name: JPA_HIBERNATE_DDL_AUTO
               valueFrom:
-                configMapRef:
+                configMapKeyRef:
                   name: vg-store-java-spring-config
                   key: JPA_HIBERNATE_DDL_AUTO
             - name: JWT_ALGORITHM
               valueFrom:
-                configMapRef:
+                configMapKeyRef:
                   name: vg-store-java-spring-config
                   key: JWT_ALGORITHM
             - name: DATASOURCE_USERNAME
