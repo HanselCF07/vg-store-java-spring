@@ -17,10 +17,40 @@ spec:
           image: vg-store-java-spring:v1
           ports:
             - containerPort: 8080
-          envFrom:
-            - configMapRef:
-                name: vg-store-java-spring-config
-            - secretRef:
-                name: vg-store-java-spring-db-secrets
-            - secretRef:
-                name: vg-store-java-spring-jwt-secrets
+          env:
+            - name: DRIVER_CLASS_NAME
+              valueFrom:
+                configMapRef:
+                  name: vg-store-java-spring-config
+                  key: DRIVER_CLASS_NAME
+            - name: DATASOURCE_URL
+              valueFrom:
+                configMapRef:
+                  name: vg-store-java-spring-config
+                  key: DATASOURCE_URL
+            - name: JPA_HIBERNATE_DDL_AUTO
+              valueFrom:
+                configMapRef:
+                  name: vg-store-java-spring-config
+                  key: JPA_HIBERNATE_DDL_AUTO
+            - name: JWT_ALGORITHM
+              valueFrom:
+                configMapRef:
+                  name: vg-store-java-spring-config
+                  key: JWT_ALGORITHM
+            - name: DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: vg-store-java-spring-db-secrets
+                  key: username
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vg-store-java-spring-db-secrets
+                  key: password
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: vg-store-java-spring-jwt-secrets
+                  key: secret
+
