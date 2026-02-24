@@ -62,9 +62,7 @@
     }
 
 # Test API
-    curl -X POST https://api.ejemplo.com \
-     -H "Content-Type: application/json" \
-     -d '{"username": "usuario1", "password": "password1"}'
+    curl -X GET http://api.ejemplo.com/api/v1/vg-hc-store/data/protected/video-games?page=0&size=5&sortBy=title&sortDir=asc
 
 
 # Port forwarding (Fastest for testing)

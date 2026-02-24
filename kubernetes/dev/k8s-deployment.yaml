@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vg-store-java-spring
+  namespace: vg-store-java-spring-dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vg-store-java-spring
+  template:
+    metadata:
+      labels:
+        app: vg-store-java-spring
+    spec:
+      containers:
+        - name: vg-store-java-spring
+          image: vg-store-java-spring:v1
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: vg-store-java-spring-config
+            - secretRef:
+                name: vg-store-java-spring-db-secrets
+            - secretRef:
+                name: vg-store-java-spring-jwt-secrets
