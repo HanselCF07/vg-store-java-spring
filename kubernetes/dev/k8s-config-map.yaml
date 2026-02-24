@@ -4,6 +4,6 @@ metadata:
   name: vg-store-java-spring-config
 data:
   DRIVER_CLASS_NAME: org.postgresql.Driver
-  DATASOURCE_URL: jdbc:postgresql://vg-store-postgres:5432/db_store
+  DATASOURCE_URL: jdbc:postgresql://192.168.1.47:5432/db_store
   JPA_HIBERNATE_DDL_AUTO: none
   JWT_ALGORITHM: HS256
