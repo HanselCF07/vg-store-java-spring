@@ -14,6 +14,7 @@ public class VideoGameMapper {
         dto.setPrice(entity.getPrice());
         dto.setDescription(entity.getDescription());
         dto.setDeveloperId(entity.getDeveloper() != null ? entity.getDeveloper().getId() : null);
+        dto.setVideoGameDeveloper(entity.getDeveloper());
         dto.setReleaseDate(entity.getReleaseDate());
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setRecordStatus(entity.getRecordStatus());
@@ -44,4 +45,6 @@ public class VideoGameMapper {
         // entity.setRecordStatus(dto.getRecordStatus());
         // createdAt normalmente no se actualiza
     }
+
 }
+

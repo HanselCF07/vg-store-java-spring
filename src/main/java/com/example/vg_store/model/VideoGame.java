@@ -1,6 +1,9 @@
 package com.example.vg_store.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 //import java.util.UUID;
 import java.time.LocalDate;
 
@@ -11,6 +14,7 @@ public class VideoGame {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // SERIAL → autoincrement
     @Column(name = "video_game_id")
+    @JsonIgnore
     private Integer id;
 
     @Column(name = "video_game_public_id", unique = true)

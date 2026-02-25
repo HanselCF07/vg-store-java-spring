@@ -3,42 +3,33 @@ package com.example.vg_store.controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.data.domain.PageRequest;
+/*import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Pageable;*/
 import org.springframework.http.HttpStatus;
-
 import com.example.vg_store.service.PermissionService;
-import com.example.vg_store.service.VideoGameService;
-import com.example.vg_store.dto.VideoGameDTO;
-
+import com.example.vg_store.service.VideoGameCategoryService;
+import com.example.vg_store.dto.VideoGameCategoryDTO;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
 
-
 @RestController
-@RequestMapping("/api/v1/vg-hc-store/data/video-games")
-public class VideoGameController {
+@RequestMapping("/api/v1/vg-hc-store/data/video-game-categories")
+public class VideoGameCategoryController {
 
-    private final VideoGameService videoGameService;
+    private final VideoGameCategoryService videoGameCategoryService;
     private final PermissionService permissionService;
 
-    public VideoGameController(VideoGameService videoGameService, PermissionService permissionService) {
-        this.videoGameService = videoGameService;
+    public VideoGameCategoryController(VideoGameCategoryService videoGameCategoryService, PermissionService permissionService) {
+        this.videoGameCategoryService = videoGameCategoryService;
         this.permissionService = permissionService;
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "title") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir,
-            @RequestParam(required = false) Integer developerId) {
-
+    public ResponseEntity<?> getAll() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
@@ -49,21 +40,11 @@ public class VideoGameController {
             return accesoInvalido;
         }
 
-        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        Page<VideoGameDTO> dataResult;
-        if (developerId != null) {
-            dataResult = videoGameService.getActiveVideoGamesByDeveloper(developerId, pageable);
-        } else {
-            dataResult = videoGameService.getActiveVideoGames(pageable);
-        }
-
-        return ResponseEntity.ok(dataResult);
+        return ResponseEntity.ok(videoGameCategoryService.getAllActive());
     }
 
-    @GetMapping("/{publicId}")
-    public ResponseEntity<?> obtenerPorPublicId(@PathVariable String publicId) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable Integer id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
@@ -74,17 +55,18 @@ public class VideoGameController {
             return accesoInvalido;
         }
 
-        VideoGameDTO videoGame = videoGameService.getByPublicId(publicId);
-        if (videoGame == null) {
+        VideoGameCategoryDTO videoGameCategory = videoGameCategoryService.getActiveById(id);
+        if (videoGameCategory == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Videojuego no encontrado o inactivo"));
+                    .body(Map.of("error", "Categoria no encontrada o inactiva"));
         }
 
-        return ResponseEntity.ok(videoGame);
+        return ResponseEntity.ok(videoGameCategory);
     }
+
 
     @PostMapping
-    public ResponseEntity<?> crear(@RequestBody VideoGameDTO dto) {
+    public ResponseEntity<?> save(@RequestBody VideoGameCategoryDTO dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
@@ -95,12 +77,12 @@ public class VideoGameController {
             return accesoInvalido;
         }
 
-        VideoGameDTO nuevo = videoGameService.save(dto);
+        VideoGameCategoryDTO nuevo = videoGameCategoryService.save(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
     }
 
-    @PutMapping("/{publicId}")
-    public ResponseEntity<?> editar(@PathVariable String publicId, @RequestBody VideoGameDTO dto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody VideoGameCategoryDTO dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
@@ -111,7 +93,7 @@ public class VideoGameController {
             return accesoInvalido;
         }
 
-        VideoGameDTO actualizado = videoGameService.update(publicId, dto);
+        VideoGameCategoryDTO actualizado = videoGameCategoryService.update(id, dto);
         if (actualizado == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", "Videojuego no encontrado"));
@@ -121,7 +103,7 @@ public class VideoGameController {
     }
 
     @DeleteMapping("/{publicId}")
-    public ResponseEntity<?> eliminar(@PathVariable String publicId) {
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
@@ -132,14 +114,14 @@ public class VideoGameController {
             return accesoInvalido;
         }
 
-        boolean eliminado = videoGameService.delete(publicId);
+        boolean eliminado = videoGameCategoryService.delete(id);
         if (!eliminado) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Videojuego no encontrado"));
+                    .body(Map.of("error", "Categoria no encontrada"));
         }
 
         return ResponseEntity.noContent().build();
     }
 
-}
 
+}

@@ -44,7 +44,6 @@ public class VideoGameService {
         return VideoGameMapper.toDTO(entity);
     }
 
-
     public VideoGameDTO save(VideoGameDTO dto) {
             VideoGameDeveloper developer = null;
             if (dto.getDeveloperId() != null) {

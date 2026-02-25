@@ -2,6 +2,8 @@ package com.example.vg_store.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "user", schema = "vg_store")
@@ -10,6 +12,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
+    @JsonIgnore
     private Integer userId;
 
     @Column(name = "user_public_key", unique = true, length = 255)
@@ -19,6 +22,7 @@ public class User {
     private String username;
 
     @Column(name = "password", nullable = false, length = 255)
+    @JsonIgnore
     private String password;
 
     @Column(name = "email", nullable = false, unique = true, length = 100)

@@ -34,4 +34,6 @@ public class VideoGameDeveloperMapper {
         entity.setRecordStatus(dto.getRecordStatus());
         // createdAt normalmente no se actualiza
     }
+
 }
+

@@ -1,40 +1,35 @@
 package com.example.vg_store.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
+//import java.util.UUID;
+//import java.time.LocalDate;
 
 
 @Entity
-@Table(name = "profile", schema = "vg_store")
-public class Profile {
+@Table(name = "video_game_category", schema = "vg_store")
+public class VideoGameCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "profile_id", nullable = false)
-    private Integer profileId;
+    @Column(name = "video_game_category_id")
+    private Integer id;
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
-
     @Column(name = "created_at", columnDefinition = "TIMESTAMPTZ")
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "record_status")
+    @Column(name = "record_status", nullable = false)
     private Integer recordStatus = 1;
 
-    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
-    private List<User> users;
-
     // Getters y Setters
-    public Integer getProfileId() {
-        return profileId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setProfileId(Integer profileId) {
-        this.profileId = profileId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -43,14 +38,6 @@ public class Profile {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -67,13 +54,5 @@ public class Profile {
 
     public void setRecordStatus(Integer recordStatus) {
         this.recordStatus = recordStatus;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 }
