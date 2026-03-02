@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v1/video-game-category-mtm")
+@RequestMapping("/api/v1/vg-hc-store/data/video-game-category-mtm")
 public class VideoGameCategoryMTMController {
 
     private final VideoGameCategoryMTMService service;
