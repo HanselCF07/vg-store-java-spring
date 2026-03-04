@@ -28,53 +28,16 @@ public class VideoGameCategoryController {
         this.permissionService = permissionService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAll() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userPublicKey = (String) auth.getPrincipal();
-
-        List<String> list_permission = List.of("Full Access", "Basic Access", "Manager");
-
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
-        }
-
-        return ResponseEntity.ok(videoGameCategoryService.getAllActive());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Integer id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userPublicKey = (String) auth.getPrincipal();
-
-        List<String> list_permission = List.of("Full Access", "Basic Access", "Manager");
-
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
-        }
-
-        VideoGameCategoryDTO videoGameCategory = videoGameCategoryService.getActiveById(id);
-        if (videoGameCategory == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Categoria no encontrada o inactiva"));
-        }
-
-        return ResponseEntity.ok(videoGameCategory);
-    }
-
-
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody VideoGameCategoryDTO dto) {
+    public ResponseEntity<?> create(@RequestBody VideoGameCategoryDTO dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         VideoGameCategoryDTO nuevo = videoGameCategoryService.save(dto);
@@ -88,9 +51,9 @@ public class VideoGameCategoryController {
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         VideoGameCategoryDTO actualizado = videoGameCategoryService.update(id, dto);
@@ -109,9 +72,9 @@ public class VideoGameCategoryController {
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         boolean eliminado = videoGameCategoryService.delete(id);
@@ -123,5 +86,5 @@ public class VideoGameCategoryController {
         return ResponseEntity.noContent().build();
     }
 
-
 }
+

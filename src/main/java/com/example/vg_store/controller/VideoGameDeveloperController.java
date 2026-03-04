@@ -27,43 +27,6 @@ public class VideoGameDeveloperController {
         this.permissionService = permissionService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> listar() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userPublicKey = (String) auth.getPrincipal();
-
-        List<String> list_permission = List.of("Full Access", "Basic Access", "Manager");
-
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
-        }
-
-        return ResponseEntity.ok(developerService.getAllActive());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerPorId(@PathVariable Integer id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userPublicKey = (String) auth.getPrincipal();
-
-        List<String> list_permission = List.of("Full Access", "Basic Access", "Manager");
-
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
-        }
-
-        VideoGameDeveloperDTO developer = developerService.getActiveById(id);
-        if (developer == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Developer no encontrado o inactivo"));
-        }
-
-        return ResponseEntity.ok(developer);
-    }
-
-
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody VideoGameDeveloperDTO dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -71,9 +34,9 @@ public class VideoGameDeveloperController {
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         if (dto.getName().isEmpty()) {
@@ -94,9 +57,9 @@ public class VideoGameDeveloperController {
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         VideoGameDeveloperDTO actualizado = developerService.update(id, dto);
@@ -115,9 +78,9 @@ public class VideoGameDeveloperController {
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         boolean eliminado = developerService.delete(id);
@@ -128,4 +91,6 @@ public class VideoGameDeveloperController {
 
         return ResponseEntity.noContent().build();
     }
+
 }
+

@@ -3,10 +3,7 @@ package com.example.vg_store.controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.data.domain.PageRequest;
 //import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import com.example.vg_store.service.PermissionService;
 import com.example.vg_store.service.VideoGameCategoryMTMService;
@@ -15,7 +12,6 @@ import com.example.vg_store.dto.VideoGameCategoryMTMDTO;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
-
 
 
 @RestController
@@ -30,39 +26,16 @@ public class VideoGameCategoryMTMController {
         this.permissionService = permissionService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getByCategories(
-            @RequestParam List<Integer> categoryIds,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userPublicKey = (String) auth.getPrincipal();
-
-        List<String> list_permission = List.of("Full Access", "Manager");
-
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
-        }
-        Pageable pageable = PageRequest.of(page, size);
-        
-        Page<VideoGameCategoryMTMDTO> dataResult;
-        dataResult = service.getByCategories(categoryIds, pageable);
-
-        return ResponseEntity.ok(dataResult);
-    }
-
     @PostMapping
-    public ResponseEntity<?> crear(@RequestBody VideoGameCategoryMTMDTO dto) {
+    public ResponseEntity<?> create(@RequestBody VideoGameCategoryMTMDTO dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         VideoGameCategoryMTMDTO nuevo = service.save(dto);
@@ -70,15 +43,15 @@ public class VideoGameCategoryMTMController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editar(@PathVariable Integer id, @RequestBody VideoGameCategoryMTMDTO dto) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody VideoGameCategoryMTMDTO dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         VideoGameCategoryMTMDTO actualizado = service.update(id, dto);
@@ -91,15 +64,15 @@ public class VideoGameCategoryMTMController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         boolean eliminado = service.delete(id);
@@ -112,3 +85,4 @@ public class VideoGameCategoryMTMController {
     }
 
 }
+

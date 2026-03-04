@@ -23,7 +23,7 @@ public class PermissionService {
         this.rolePermissionRepository = rolePermissionRepository;
     }
 
-    public boolean tienePermiso(String userPublicKey, List<String> requiredPermissions) {
+    public boolean validateAccessPermission(String userPublicKey, List<String> requiredPermissions) {
         User user = userRepository.findByUserPublicKey(userPublicKey);
         if (user == null || user.getRecordStatus() != 1 || user.getUserStatus() == null || user.getUserStatus().getStatusId() != 1) {
             return false;
@@ -42,8 +42,8 @@ public class PermissionService {
     }
 
     // Método centralizado para controladores
-    public ResponseEntity<?> validarAcceso(String userPublicKey, List<String> requiredPermissions) {
-        if (!tienePermiso(userPublicKey, requiredPermissions)) {
+    public ResponseEntity<?> validateAccess(String userPublicKey, List<String> requiredPermissions) {
+        if (!validateAccessPermission(userPublicKey, requiredPermissions)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", "Invalid access"));
         }

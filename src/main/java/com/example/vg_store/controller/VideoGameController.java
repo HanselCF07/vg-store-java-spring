@@ -3,10 +3,6 @@ package com.example.vg_store.controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import com.example.vg_store.service.PermissionService;
@@ -16,7 +12,6 @@ import com.example.vg_store.dto.VideoGameDTO;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
-
 
 
 @RestController
@@ -31,68 +26,16 @@ public class VideoGameController {
         this.permissionService = permissionService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "title") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir,
-            @RequestParam(required = false) Integer developerId) {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userPublicKey = (String) auth.getPrincipal();
-
-        List<String> list_permission = List.of("Full Access", "Basic Access", "Manager");
-
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
-        }
-
-        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        Page<VideoGameDTO> dataResult;
-        if (developerId != null) {
-            dataResult = videoGameService.getActiveVideoGamesByDeveloper(developerId, pageable);
-        } else {
-            dataResult = videoGameService.getActiveVideoGames(pageable);
-        }
-
-        return ResponseEntity.ok(dataResult);
-    }
-
-    @GetMapping("/{publicId}")
-    public ResponseEntity<?> obtenerPorPublicId(@PathVariable String publicId) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userPublicKey = (String) auth.getPrincipal();
-
-        List<String> list_permission = List.of("Full Access", "Basic Access", "Manager");
-
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
-        }
-
-        VideoGameDTO videoGame = videoGameService.getByPublicId(publicId);
-        if (videoGame == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Videojuego no encontrado o inactivo"));
-        }
-
-        return ResponseEntity.ok(videoGame);
-    }
-
     @PostMapping
-    public ResponseEntity<?> crear(@RequestBody VideoGameDTO dto) {
+    public ResponseEntity<?> create(@RequestBody VideoGameDTO dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         VideoGameDTO nuevo = videoGameService.save(dto);
@@ -100,15 +43,15 @@ public class VideoGameController {
     }
 
     @PutMapping("/{publicId}")
-    public ResponseEntity<?> editar(@PathVariable String publicId, @RequestBody VideoGameDTO dto) {
+    public ResponseEntity<?> update(@PathVariable String publicId, @RequestBody VideoGameDTO dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         VideoGameDTO actualizado = videoGameService.update(publicId, dto);
@@ -121,15 +64,15 @@ public class VideoGameController {
     }
 
     @DeleteMapping("/{publicId}")
-    public ResponseEntity<?> eliminar(@PathVariable String publicId) {
+    public ResponseEntity<?> delete(@PathVariable String publicId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userPublicKey = (String) auth.getPrincipal();
 
         List<String> list_permission = List.of("Full Access", "Manager");
 
-        ResponseEntity<?> accesoInvalido = permissionService.validarAcceso(userPublicKey, list_permission);
-        if (accesoInvalido != null) {
-            return accesoInvalido;
+        ResponseEntity<?> invalidAccess = permissionService.validateAccess(userPublicKey, list_permission);
+        if (invalidAccess != null) {
+            return invalidAccess;
         }
 
         boolean eliminado = videoGameService.delete(publicId);
