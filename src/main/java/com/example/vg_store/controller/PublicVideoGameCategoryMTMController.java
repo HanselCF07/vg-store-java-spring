@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1/vg-hc-store/public/data/video-game-category-mtm")
+@RequestMapping("/api/v1/vg-hc-store/data/public/video-game-category-mtm")
 public class PublicVideoGameCategoryMTMController {
 
     private final VideoGameCategoryMTMService service;

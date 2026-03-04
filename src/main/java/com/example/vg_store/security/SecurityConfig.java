@@ -30,7 +30,7 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults()) // Habilita CORS usando la configuración global definida arriba
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/v1/vg-hc-store/public/**").permitAll()
+                .requestMatchers("/api/v1/vg-hc-store/data/public/**").permitAll()
                 .anyRequest().authenticated())
             .exceptionHandling(exceptionHandling -> exceptionHandling
                 .authenticationEntryPoint(new CustomAuthEntryPoint()))

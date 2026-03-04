@@ -9,7 +9,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v1/vg-hc-store/public/data/video-game-categories")
+@RequestMapping("/api/v1/vg-hc-store/data/public/video-game-categories")
 public class PublicVideoGameCategoryController {
 
     private final VideoGameCategoryService videoGameCategoryService;

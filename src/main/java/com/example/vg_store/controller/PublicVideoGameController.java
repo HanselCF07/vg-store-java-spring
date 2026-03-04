@@ -15,7 +15,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v1/vg-hc-store/public/data/video-games")
+@RequestMapping("/api/v1/vg-hc-store/data/public/video-games")
 public class PublicVideoGameController {
 
     private final VideoGameService videoGameService;
